@@ -31,6 +31,7 @@ import           System.IO.UTF8 (readUTF8FileT)
 
 data PSCMakeOptions = PSCMakeOptions
   { pscmInput        :: [FilePath]
+  , pscmInputTargets :: [FilePath]
   , pscmOutputDir    :: FilePath
   , pscmOpts         :: P.Options
   , pscmUsePrefix    :: Bool
@@ -93,6 +94,14 @@ inputFile :: Opts.Parser FilePath
 inputFile = Opts.strArgument $
      Opts.metavar "FILE"
   <> Opts.help "The input .purs file(s)."
+
+dependencyTargets :: Opts.Parser FilePath
+dependencyTargets = Opts.strOption $
+     Opts.short 'd'
+  <> Opts.long "dependencies"
+  <> Opts.help ("Specifies comma separated target dependencies. " <>
+                "Only directories are accepted")
+
 
 outputDirectory :: Opts.Parser FilePath
 outputDirectory = Opts.strOption $
@@ -161,6 +170,7 @@ options =
     <$> verboseErrors
     <*> (not <$> comments)
     <*> (handleTargets <$> codegenTargets)
+    <*> dependencyTargets
   where
     -- Ensure that the JS target is included if sourcemaps are
     handleTargets :: [P.CodegenTarget] -> S.Set P.CodegenTarget

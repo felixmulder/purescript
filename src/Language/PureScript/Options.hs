@@ -12,11 +12,13 @@ data Options = Options
   -- ^ Remove the comments from the generated js
   , optionsCodegenTargets :: S.Set CodegenTarget
   -- ^ Codegen targets (JS, CoreFn, etc.)
+  , optionsDependencyTargets :: S.Set FilePath
+  -- ^ Codegen dependency targets (e.g. precompiled modules)
   } deriving Show
 
 -- Default make options
 defaultOptions :: Options
-defaultOptions = Options False False (S.singleton JS)
+defaultOptions = Options False False (S.singleton JS) (S.empty)
 
 data CodegenTarget = JS | JSSourceMap | CoreFn
   deriving (Eq, Ord, Show)
